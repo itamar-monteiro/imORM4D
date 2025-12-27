@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2025/12/24 12:22:37.000.580,=D:\ProjectFolder\Unit5.pas</Transaction>
+    <Transaction>2025/12/24 12:26:09.000.897,D:\ProjectFolder\Unit5.dfm=D:\Delphi\imORM4D\Sample\Orm4DExample.dfm</Transaction>
+    <Transaction>2025/12/24 12:26:09.000.897,D:\ProjectFolder\Unit5.pas=D:\Delphi\imORM4D\Sample\Orm4DExample.pas</Transaction>
+    <Transaction>2025/12/24 12:26:34.000.130,D:\ProjectFolder\Project2.dproj=D:\Delphi\imORM4D\Sample\imORM4DSample.dproj</Transaction>
+    <Transaction>2025/12/24 12:26:55.000.368,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 12:28:43.000.838,D:\Delphi\imORM4D\Sample\Unit1.pas=D:\Delphi\imORM4D\ORM\imOrm4D.Attributes.pas</Transaction>
+    <Transaction>2025/12/24 12:56:01.000.472,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 12:57:39.000.610,D:\Delphi\imORM4D\Sample\Unit1.pas=D:\Delphi\imORM4D\ORM\imOrm4D.Attributes.Helper.pas</Transaction>
+    <Transaction>2025/12/24 13:05:51.000.572,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 13:06:44.000.151,D:\Delphi\imORM4D\Sample\Unit1.pas=D:\Delphi\imORM4D\ORM\imOrm4D.Interfaces.Connection.pas</Transaction>
+    <Transaction>2025/12/24 13:12:22.000.468,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 14:03:31.000.714,D:\Delphi\imORM4D\Sample\Unit1.pas=D:\Delphi\imORM4D\ORM\imOrm4D.Connection.Postgres.pas</Transaction>
+    <Transaction>2025/12/24 14:04:51.000.243,D:\Delphi\imORM4D\ORM\imOrm4D.Connection.Postgres.pas=D:\Delphi\imORM4D\ORM\imOrm4D.Connection.BaseConnection.pas</Transaction>
+    <Transaction>2025/12/24 14:13:11.000.777,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 14:14:14.000.306,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 14:14:51.000.176,D:\Delphi\imORM4D\Sample\Unit1.pas=D:\Delphi\imORM4D\ORM\imOrm4D.Connection.Postgres.pas</Transaction>
+    <Transaction>2025/12/24 14:32:36.000.284,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 14:33:11.000.659,D:\Delphi\imORM4D\Sample\Unit1.pas=D:\Delphi\imORM4D\ORM\imOrm4D.Interfaces.Criteria.pas</Transaction>
+    <Transaction>2025/12/24 14:34:35.000.298,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 14:35:07.000.286,D:\Delphi\imORM4D\Sample\Unit1.pas=D:\Delphi\imORM4D\ORM\imOrm4D.Criteria.pas</Transaction>
+    <Transaction>2025/12/24 15:17:46.000.910,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 15:18:28.000.051,D:\Delphi\imORM4D\Sample\Unit1.pas=D:\Delphi\imORM4D\ORM\imOrm4D.Interfaces.Repository.pas</Transaction>
+    <Transaction>2025/12/24 15:26:01.000.401,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 15:26:24.000.131,D:\Delphi\imORM4D\Sample\Unit1.pas=D:\Delphi\imORM4D\ORM\imOrm4D.Repository.pas</Transaction>
+    <Transaction>2025/12/24 15:40:26.000.821,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 15:44:28.000.883,D:\Delphi\imORM4D\Sample\Unit1.pas=D:\Delphi\imORM4D\Sample\Entidades\imORM4D.Sample.Entidade.Produto.pas</Transaction>
+    <Transaction>2025/12/24 19:18:29.000.842,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 19:18:59.000.241,D:\Delphi\imORM4D\ORM\imOrm4D.DisplayAttributes.pas=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 19:21:04.000.590,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 19:21:39.000.248,D:\Delphi\imORM4D\ORM\imOrm4D.Interfaces.Repository.DataSet.pas=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 19:26:33.000.684,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/24 19:26:52.000.295,D:\Delphi\imORM4D\ORM\imOrm4D.Repository.DataSet.pas=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/25 13:54:46.000.984,D:\Delphi\imORM4D\ORM\imOrm4D.Repository.DataSet.pas=</Transaction>
+    <Transaction>2025/12/25 13:55:01.000.087,D:\Delphi\imORM4D\ORM\imOrm4D.Interfaces.Repository.DataSet.pas=</Transaction>
+    <Transaction>2025/12/25 19:54:49.000.857,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/25 19:55:14.000.778,D:\Delphi\imORM4D\Sample\Unit1.pas=D:\Delphi\imORM4D\ORM\imOrm4D.Interfaces.EndCriteria.pas</Transaction>
+    <Transaction>2025/12/25 19:57:15.000.334,=D:\Delphi\imORM4D\Sample\Unit1.pas</Transaction>
+    <Transaction>2025/12/25 19:57:49.000.504,D:\Delphi\imORM4D\Sample\Unit1.pas=D:\Delphi\imORM4D\ORM\imOrm4D.EndCriteria.pas</Transaction>
+    <Transaction>2025/12/25 20:06:57.000.885,D:\Delphi\imORM4D\ORM\imOrm4D.EndCriteria.pas=</Transaction>
+    <Transaction>2025/12/25 20:06:58.000.057,D:\Delphi\imORM4D\ORM\imOrm4D.Interfaces.EndCriteria.pas=</Transaction>
+    <Transaction>2025/12/26 21:25:46.000.149,D:\Delphi\imORM4D\ORM\imOrm4D.Connection.Postgres.pas=D:\Delphi\imORM4D\ORM\Drivers\imOrm4D.Connection.Firebird.pas</Transaction>
+    <Transaction>2025/12/26 21:26:42.000.821,=D:\Delphi\imORM4D\ORM\Drivers\imOrm4D.Connection.Postgres.pas</Transaction>
+    <Transaction>2025/12/26 21:31:52.320,=D:\Delphi\imORM4D\ORM\Drivers\imOrm4D.Connection.BaseConnection.pas</Transaction>
+    <Transaction>2025/12/26 21:31:52.447,=D:\Delphi\imORM4D\ORM\Drivers\imOrm4D.Interfaces.Connection.pas</Transaction>
+  </Transactions>
+</BorlandProject>
