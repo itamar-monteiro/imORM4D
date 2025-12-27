@@ -28,7 +28,7 @@ type
     procedure ConfigureConnection; override;
     constructor Create(const AServer, ADatabase, AUser, APassword: string; APort: Integer = 5432); reintroduce;
   public
-    function GetDialect: TDatabaseDriver; override;
+    function GetDatabaseDriver: TDatabaseDriver; override;
     class function New(const AServer, ADatabase, AUser, APassword: string; APort: Integer): TPostgresConnection;
   end;
 
@@ -48,7 +48,7 @@ begin
   FPort    := APort;
 end;
 
-function TPostgresConnection.GetDialect: TDatabaseDriver;
+function TPostgresConnection.GetDatabaseDriver: TDatabaseDriver;
 begin
   Result:= ddPostgres;
 end;

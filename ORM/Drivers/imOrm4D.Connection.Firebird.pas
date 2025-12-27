@@ -28,7 +28,7 @@ type
     procedure ConfigureConnection; override;
     constructor Create(const AServer, ADatabase, AUser, APassword: string; APort: Integer = 3050); reintroduce;
   public
-    function GetDialect: TDatabaseDriver; override;
+    function GetDatabaseDriver: TDatabaseDriver; override;
     class function New(const AServer, ADatabase, AUser, APassword: string; APort: Integer): TFirebirdConnection;
   end;
 
@@ -48,7 +48,7 @@ begin
   FPort    := APort;
 end;
 
-function TFirebirdConnection.GetDialect: TDatabaseDriver;
+function TFirebirdConnection.GetDatabaseDriver: TDatabaseDriver;
 begin
   Result:= ddFirebird;
 end;

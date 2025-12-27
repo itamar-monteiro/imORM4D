@@ -223,6 +223,24 @@ object FSample: TFSample
     TabOrder = 11
     OnClick = Button10Click
   end
+  object Button11: TButton
+    Left = 320
+    Top = 207
+    Width = 150
+    Height = 35
+    Caption = 'COUNT'
+    TabOrder = 12
+    OnClick = Button11Click
+  end
+  object Button12: TButton
+    Left = 479
+    Top = 209
+    Width = 150
+    Height = 35
+    Caption = 'PAGINA'#199#195'O'
+    TabOrder = 13
+    OnClick = Button12Click
+  end
   object DataSource1: TDataSource
     Left = 64
     Top = 280

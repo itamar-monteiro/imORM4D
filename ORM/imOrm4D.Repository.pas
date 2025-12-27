@@ -11,14 +11,14 @@ uses
   imOrm4D.Attributes.Helper,
   imOrm4D.Attributes,
   imOrm4D.Interfaces.Connection,
-  imOrm4D.Interfaces.Criteria,
+  imOrm4D.Interfaces.Select,
   imOrm4D.Interfaces.Repository,
   imOrm4D.DisplayAttributes;
 
 type
   TRepository<T: class, constructor> = class(TInterfacedObject, IRepository<T>)
   private
-    FCriteria: ICriteria<IRepository<T>>;
+    FSelect: ISelect<IRepository<T>>;
     FLastQuery: TFDQuery;
     FDataSource: TDataSource;
     function CreateEntity: T;
@@ -37,7 +37,7 @@ type
     function Delete(const AEntity: T): IRepository<T>;
     function GetById(const AId: Variant): T;
     function GetAll: TList<T>;
-    function Criteria: ICriteria<IRepository<T>>;
+    function Select: ISelect<IRepository<T>>;
     function List: IRepository<T>;
     function DataSource(ADataSource: TDataSource): IRepository<T>;
     constructor Create(const AConnection: IDatabaseConnection);
@@ -52,15 +52,16 @@ uses
   System.TypInfo,
   System.StrUtils,
   System.Classes,
-  imOrm4D.Criteria;
+  imOrm4D.Select,
+  imOrm4D.Connection.Driver.Helper;
 
 constructor TRepository<T>.Create(const AConnection: IDatabaseConnection);
 begin
-  FConn     := AConnection;
-  FContext  := TRttiContext.Create;
-  FType     := FContext.GetType(TypeInfo(T));
-  FTable    := GetTableName(FType);
-  FCriteria := nil;
+  FConn   := AConnection;
+  FContext:= TRttiContext.Create;
+  FType   := FContext.GetType(TypeInfo(T));
+  FTable  := GetTableName(FType);
+  FSelect := nil;
   FLastQuery:= nil;
 end;
 
@@ -69,11 +70,11 @@ begin
   Result:= T.Create;
 end;
 
-function TRepository<T>.Criteria: ICriteria<IRepository<T>>;
+function TRepository<T>.Select: ISelect<IRepository<T>>;
 begin
-  if not Assigned(FCriteria) then
-    FCriteria:= TCriteria<IRepository<T>>.Create(Self as IRepository<T>);
-  Result:= FCriteria;
+  if not Assigned(FSelect) then
+    FSelect:= TSelect<IRepository<T>>.Create(Self as IRepository<T>);
+  Result:= FSelect;
 end;
 
 function TRepository<T>.PrimaryKeyProp: TRttiProperty;
@@ -273,7 +274,7 @@ destructor TRepository<T>.Destroy;
 begin
   if Assigned(FLastQuery) then
     FLastQuery.Free;
-  FCriteria:= nil; // Interface será liberada automaticamente
+  FSelect:= nil; // Interface será liberada automaticamente
   inherited;
 end;
 
@@ -511,7 +512,7 @@ var
 begin
   Result:= Self;
 
-  if not Assigned(FCriteria) then
+  if not Assigned(FSelect) then
     raise Exception.Create('Criteria não definido. Use .Criteria antes de .List');
 
   // Libera query anterior se existir
@@ -525,7 +526,11 @@ begin
   Query.Connection:= FConn.GetConnection;
   FLastQuery:= Query;
 
-  SQL:= FCriteria.ToSQL(FTable, Params);
+  SQL:= FSelect.ToSQL(FTable, Params);
+
+  if (FSelect.Limit > 0) and (FSelect.Offset > -1) then
+    SQL:= TDatabaseDriverHelper.ApplyPagination(FConn.GetDatabaseDriver, SQL, FSelect.Limit, FSelect.Offset);
+
   FLastQuery.SQL.Text:= SQL;
 
   for I:= 0 to High(Params) do
@@ -593,7 +598,7 @@ begin
   if Assigned(FDataSource) then
     FDataSource.DataSet:= FLastQuery;
 
-  FCriteria:= nil;
+  FSelect:= nil;
 end;
 
 end.

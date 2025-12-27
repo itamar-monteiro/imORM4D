@@ -1,4 +1,4 @@
-unit imOrm4D.Criteria;
+unit imOrm4D.Select;
 
 interface
 
@@ -7,10 +7,10 @@ uses
   System.Classes,
   System.Generics.Collections,
   System.StrUtils,
-  imOrm4D.Interfaces.Criteria;
+  imOrm4D.Interfaces.Select;
 
 type
-  TCriteria<T: IInterface> = class(TInterfacedObject, ICriteria<T>)
+  TSelect<T: IInterface> = class(TInterfacedObject, ISelect<T>)
   private
     FPredicates: TList<TPredicate>;
     FPredicate: TPredicate;
@@ -21,31 +21,37 @@ type
     FFields: TList<string>;
     FSelectFields: TArray<string>;
     FJoins: TList<TJoin>;
+    FGroupBy: TList<string>;
     FAliasName: string;
     [Weak] FRepository: T; // Referência para o IRepository
   public
     constructor Create(AOwner: T);
     destructor Destroy; override;
 
-    function AddField(const AField: string): ICriteria<T>;
-    function Equal(const AField: string; const AValue: Variant): ICriteria<T>;
-    function Like(const AField, APattern: string): ICriteria<T>;
-    function GreaterThan(const AField: string; const AValue: Integer): ICriteria<T>;
-    function LessThan(const AField: string; const AValue: Integer): ICriteria<T>;
-    function &In(const AField: string; const AValues: array of Integer): ICriteria<T>; overload;
-    function &In(const AField: string; const AValues: array of string): ICriteria<T>; overload;
-    function Between(const AField: string; const Value1, Value2: Integer): ICriteria<T>; overload;
-    function Between(const AField: string; const Value1, Value2: TDateTime): ICriteria<T>; overload;
-    function IsNull(const AField: string): ICriteria<T>;
-    function IsNotNull(const AField: string): ICriteria<T>;
-    function InnerJoin(const ATable, OnCondition: string): ICriteria<T>;
-    function LeftJoin(const ATable, OnCondition: string): ICriteria<T>;
-    function OrderBy(const AField: string; const Desc: Boolean = False): ICriteria<T>;
-    function Limit(const ACount: Integer): ICriteria<T>;
-    function Offset(const AOffset: Integer): ICriteria<T>;
+    function AddField(const AField: string): ISelect<T>;
+    function Equal(const AField: string; const AValue: Variant): ISelect<T>;
+    function Like(const AField, APattern: string): ISelect<T>;
+    function GreaterThan(const AField: string; const AValue: Integer): ISelect<T>;
+    function LessThan(const AField: string; const AValue: Integer): ISelect<T>;
+    function &In(const AField: string; const AValues: array of Integer): ISelect<T>; overload;
+    function &In(const AField: string; const AValues: array of string): ISelect<T>; overload;
+    function Between(const AField: string; const Value1, Value2: Integer): ISelect<T>; overload;
+    function Between(const AField: string; const Value1, Value2: TDateTime): ISelect<T>; overload;
+    function IsNull(const AField: string): ISelect<T>;
+    function IsNotNull(const AField: string): ISelect<T>;
+    function InnerJoin(const ATable, OnCondition: string): ISelect<T>;
+    function LeftJoin(const ATable, OnCondition: string): ISelect<T>;
+    function OrderBy(const AField: string; const Desc: Boolean = False): ISelect<T>;
+    function GroupBy(const AField: string): ISelect<T>;
+    function Limit(const ACount: Integer): ISelect<T>; overload;
+    function Offset(const AOffset: Integer): ISelect<T>; overload;
+    function Limit: Integer; overload;
+    function Offset: Integer; overload;
     function ToSQL(const ATable: string; out Params: TArray<Variant>): string;
     function SelectedFields: TArray<string>;
-    function TableAlias(const AliasName: string): ICriteria<T>;
+    function TableAlias(const AliasName: string): ISelect<T>;
+    function Skip(const ACount: Integer): ISelect<T>;
+    function Take(const ACount: Integer): ISelect<T>;
     function &End: T;
   end;
 
@@ -54,7 +60,7 @@ implementation
 uses
   System.Variants;
 
-function TCriteria<T>.Between(const AField: string; const Value1, Value2: Integer): ICriteria<T>;
+function TSelect<T>.Between(const AField: string; const Value1, Value2: Integer): ISelect<T>;
 begin
   Result:= Self;
   FPredicate.Field:= AField;
@@ -64,12 +70,12 @@ begin
   FPredicates.Add(FPredicate);
 end;
 
-function TCriteria<T>.&End: T;
+function TSelect<T>.&End: T;
 begin
   Result:= FRepository;
 end;
 
-function TCriteria<T>.Between(const AField: string; const Value1, Value2: TDateTime): ICriteria<T>;
+function TSelect<T>.Between(const AField: string; const Value1, Value2: TDateTime): ISelect<T>;
 begin
   Result:= Self;
   FPredicate.Field:= AField;
@@ -79,7 +85,7 @@ begin
   FPredicates.Add(FPredicate);
 end;
 
-function TCriteria<T>.&In(const AField: string; const AValues: array of string): ICriteria<T>;
+function TSelect<T>.&In(const AField: string; const AValues: array of string): ISelect<T>;
 var
   I: Integer;
 begin
@@ -95,7 +101,7 @@ begin
   FPredicates.Add(FPredicate);
 end;
 
-function TCriteria<T>.&In(const AField: string; const AValues: array of Integer): ICriteria<T>;
+function TSelect<T>.&In(const AField: string; const AValues: array of Integer): ISelect<T>;
 var
   I: Integer;
 begin
@@ -111,27 +117,29 @@ begin
   FPredicates.Add(FPredicate);
 end;
 
-constructor TCriteria<T>.Create(AOwner: T);
+constructor TSelect<T>.Create(AOwner: T);
 begin
   FRepository:= AOwner;
   FPredicates:= TList<TPredicate>.Create;
-  FOrders:= TList<TOrder>.Create;
-  FJoins := TList<TJoin>.Create;
-  FFields:= TList<string>.Create;
-  FLimit := -1;
-  FOffset:= -1;
+  FOrders := TList<TOrder>.Create;
+  FJoins  := TList<TJoin>.Create;
+  FFields := TList<string>.Create;
+  FGroupBy:= TList<string>.Create;
+  FLimit  := -1;
+  FOffset := -1;
 end;
 
-destructor TCriteria<T>.Destroy;
+destructor TSelect<T>.Destroy;
 begin
   FPredicates.Free;
   FOrders.Free;
   FJoins.Free;
   FFields.free;
+  FGroupBy.Free;
   inherited;
 end;
 
-function TCriteria<T>.Equal(const AField: string; const AValue: Variant): ICriteria<T>;
+function TSelect<T>.Equal(const AField: string; const AValue: Variant): ISelect<T>;
 begin
   FPredicate.Field:= AField;
   FPredicate.Op   := opEq;
@@ -140,13 +148,13 @@ begin
   Result:= Self;
 end;
 
-function TCriteria<T>.InnerJoin(const ATable, OnCondition: string): ICriteria<T>;
+function TSelect<T>.InnerJoin(const ATable, OnCondition: string): ISelect<T>;
 begin
   Result:= Self;
   FJoins.Add(TJoin.Make(jtInner, aTable, OnCondition));
 end;
 
-function TCriteria<T>.IsNotNull(const AField: string): ICriteria<T>;
+function TSelect<T>.IsNotNull(const AField: string): ISelect<T>;
 begin
   Result:= Self;
   FPredicate.Field:= AField;
@@ -156,7 +164,7 @@ begin
   FPredicates.Add(FPredicate);
 end;
 
-function TCriteria<T>.IsNull(const AField: string): ICriteria<T>;
+function TSelect<T>.IsNull(const AField: string): ISelect<T>;
 begin
   Result:= Self;
   FPredicate.Field:= AField;
@@ -166,7 +174,7 @@ begin
   FPredicates.Add(FPredicate);
 end;
 
-function TCriteria<T>.Like(const AField, APattern: string): ICriteria<T>;
+function TSelect<T>.Like(const AField, APattern: string): ISelect<T>;
 begin
   Result:= Self;
   FPredicate.Field:= AField;
@@ -175,7 +183,12 @@ begin
   FPredicates.Add(FPredicate);
 end;
 
-function TCriteria<T>.GreaterThan(const AField: string; const AValue: Integer): ICriteria<T>;
+function TSelect<T>.Limit: Integer;
+begin
+  Result:= FLimit;
+end;
+
+function TSelect<T>.GreaterThan(const AField: string; const AValue: Integer): ISelect<T>;
 begin
   FPredicate.Field:= AField;
   FPredicate.Op   := opGt;
@@ -184,7 +197,13 @@ begin
   Result := Self;
 end;
 
-function TCriteria<T>.LessThan(const AField: string; const AValue: Integer): ICriteria<T>;
+function TSelect<T>.GroupBy(const AField: string): ISelect<T>;
+begin
+  Result:= Self;
+  FGroupBy.Add(AField);
+end;
+
+function TSelect<T>.LessThan(const AField: string; const AValue: Integer): ISelect<T>;
 begin
   FPredicate.Field:= AField;
   FPredicate.Op   := opLt;
@@ -193,7 +212,12 @@ begin
   Result:= Self;
 end;
 
-function TCriteria<T>.OrderBy(const AField: string; const Desc: Boolean): ICriteria<T>;
+function TSelect<T>.Offset: Integer;
+begin
+  Result:= FOffset;
+end;
+
+function TSelect<T>.OrderBy(const AField: string; const Desc: Boolean): ISelect<T>;
 begin
   FOrder.Field:= AField;
   FOrder.Desc := Desc;
@@ -202,42 +226,54 @@ begin
   Result:= Self;
 end;
 
-function TCriteria<T>.LeftJoin(const ATable, OnCondition: string): ICriteria<T>;
+function TSelect<T>.LeftJoin(const ATable, OnCondition: string): ISelect<T>;
 begin
   Result:= Self;
   FJoins.Add(TJoin.Make(jtLeft, aTable, OnCondition));
 end;
 
-function TCriteria<T>.SelectedFields: TArray<string>;
+function TSelect<T>.SelectedFields: TArray<string>;
 begin
   Result:= FSelectFields;
 end;
 
-function TCriteria<T>.AddField(const AField: string): ICriteria<T>;
+function TSelect<T>.Skip(const ACount: Integer): ISelect<T>;
+begin
+  Result:= Self;
+  FOffset:= ACount;
+end;
+
+function TSelect<T>.AddField(const AField: string): ISelect<T>;
 begin
   Result:= Self;
   FFields.Add(AField);
 end;
 
-function TCriteria<T>.Limit(const ACount: Integer): ICriteria<T>;
+function TSelect<T>.Limit(const ACount: Integer): ISelect<T>;
 begin
   FLimit:= ACount;
   Result:= Self;
 end;
 
-function TCriteria<T>.Offset(const AOffset: Integer): ICriteria<T>;
+function TSelect<T>.Offset(const AOffset: Integer): ISelect<T>;
 begin
   FOffset:= AOffset;
   Result := Self;
 end;
 
-function TCriteria<T>.TableAlias(const AliasName: string): ICriteria<T>;
+function TSelect<T>.TableAlias(const AliasName: string): ISelect<T>;
 begin
   Result:= Self;
   FAliasName:= Trim(AliasName);
 end;
 
-function TCriteria<T>.ToSQL(const ATable: string; out Params: TArray<Variant>): string;
+function TSelect<T>.Take(const ACount: Integer): ISelect<T>;
+begin
+  Result:= Self;
+  FLimit:= ACount;
+end;
+
+function TSelect<T>.ToSQL(const ATable: string; out Params: TArray<Variant>): string;
 var
   WhereParts: TArray<string>;
   P: TPredicate;
@@ -361,6 +397,10 @@ begin
   if Length(WhereParts) > 0 then
     Result:= Result + ' WHERE ' + String.Join(' AND ', WhereParts);
 
+  // GROUP BY
+  if FGroupBy.Count > 0 then
+    Result:= Result + ' GROUP BY ' + String.Join(', ', FGroupBy.ToArray);
+
   // ORDER BY
   if FOrders.Count > 0 then
   begin
@@ -380,11 +420,11 @@ begin
     end;
   end;
 
-  if FLimit >= 0 then
-    Result:= Result + Format(' LIMIT %d', [FLimit]);
-
-  if FOffset >= 0 then
-    Result:= Result + Format(' OFFSET %d', [FOffset]);
+//  if FLimit >= 0 then
+//    Result:= Result + Format(' LIMIT %d', [FLimit]);
+//
+//  if FOffset >= 0 then
+//    Result:= Result + Format(' OFFSET %d', [FOffset]);
 end;
 
 end.

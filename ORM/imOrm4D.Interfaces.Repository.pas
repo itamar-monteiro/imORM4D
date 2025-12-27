@@ -10,7 +10,7 @@ uses
   FireDAC.Comp.Client,
   imOrm4D.Attributes,
   imOrm4D.Interfaces.Connection,
-  imOrm4D.Interfaces.Criteria;
+  imOrm4D.Interfaces.Select;
 
 type
   IRepository<T> = interface
@@ -21,7 +21,7 @@ type
     function Delete(const AEntity: T): IRepository<T>;
     function GetById(const AId: Variant): T;
     function GetAll: TList<T>;
-    function Criteria: ICriteria<IRepository<T>>;
+    function Select: ISelect<IRepository<T>>;
     function DataSource(ADataSource: TDataSource): IRepository<T>;
     function List: IRepository<T>;
   end;

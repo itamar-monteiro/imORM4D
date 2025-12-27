@@ -1,4 +1,4 @@
-unit imOrm4D.Interfaces.Criteria;
+unit imOrm4D.Interfaces.Select;
 
 interface
 
@@ -38,27 +38,32 @@ type
     class function Make(AType: TJoinType; const ATable, AOn: string): TJoin; static;
   end;
 
-  ICriteria<T> = interface
+  ISelect<T> = interface
     ['{DF2E963E-4727-4F8C-9F85-358F4A7267BD}']
-    function AddField(const AField: string): ICriteria<T>;
-    function Equal(const AField: string; const AValue: Variant): ICriteria<T>;
-    function Like(const AField, APattern: string): ICriteria<T>;
-    function GreaterThan(const AField: string; const AValue: Integer): ICriteria<T>;
-    function LessThan(const AField: string; const AValue: Integer): ICriteria<T>;
-    function &In(const AField: string; const AValues: array of Integer): ICriteria<T>; overload;
-    function &In(const AField: string; const AValues: array of string): ICriteria<T>; overload;
-    function Between(const AField: string; const Value1, Value2: Integer): ICriteria<T>; overload;
-    function Between(const AField: string; const Value1, Value2: TDateTime): ICriteria<T>; overload;
-    function IsNull(const AField: string): ICriteria<T>;
-    function IsNotNull(const AField: string): ICriteria<T>;
-    function InnerJoin(const ATable, OnCondition: string): ICriteria<T>;
-    function LeftJoin(const ATable, OnCondition: string): ICriteria<T>;
-    function OrderBy(const AField: string; const Desc: Boolean = False): ICriteria<T>;
-    function Limit(const ACount: Integer): ICriteria<T>;
-    function Offset(const AOffset: Integer): ICriteria<T>;
+    function AddField(const AField: string): ISelect<T>;
+    function Equal(const AField: string; const AValue: Variant): ISelect<T>;
+    function Like(const AField, APattern: string): ISelect<T>;
+    function GreaterThan(const AField: string; const AValue: Integer): ISelect<T>;
+    function LessThan(const AField: string; const AValue: Integer): ISelect<T>;
+    function &In(const AField: string; const AValues: array of Integer): ISelect<T>; overload;
+    function &In(const AField: string; const AValues: array of string): ISelect<T>; overload;
+    function Between(const AField: string; const Value1, Value2: Integer): ISelect<T>; overload;
+    function Between(const AField: string; const Value1, Value2: TDateTime): ISelect<T>; overload;
+    function IsNull(const AField: string): ISelect<T>;
+    function IsNotNull(const AField: string): ISelect<T>;
+    function InnerJoin(const ATable, OnCondition: string): ISelect<T>;
+    function LeftJoin(const ATable, OnCondition: string): ISelect<T>;
+    function OrderBy(const AField: string; const Desc: Boolean = False): ISelect<T>;
+    function GroupBy(const AField: string): ISelect<T>;
+    function Limit(const ACount: Integer): ISelect<T>; overload;
+    function Offset(const AOffset: Integer): ISelect<T>; overload;
+    function Limit: Integer; overload;
+    function Offset: Integer; overload;
     function ToSQL(const ATable: string; out Params: TArray<Variant>): string;
     function SelectedFields: TArray<string>;
-    function TableAlias(const AliasName: string): ICriteria<T>;
+    function TableAlias(const AliasName: string): ISelect<T>;
+    function Skip(const ACount: Integer): ISelect<T>;
+    function Take(const ACount: Integer): ISelect<T>;
     // Método para retornar ao IRepository
     function &End: T;
   end;

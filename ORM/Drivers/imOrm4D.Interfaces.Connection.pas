@@ -19,7 +19,7 @@ type
   IDatabaseConnection = interface
     ['{376F0B9C-01BB-4A5A-8B9B-24B2C49D0230}']
     function GetConnection: TFDConnection;
-    function GetDialect: TDatabaseDriver;
+    function GetDatabaseDriver: TDatabaseDriver;
     procedure Connect;
     procedure Disconnect;
     function InTransaction: Boolean;

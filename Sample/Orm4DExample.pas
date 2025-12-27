@@ -49,6 +49,8 @@ type
     Button8: TButton;
     Button9: TButton;
     Button10: TButton;
+    Button11: TButton;
+    Button12: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -60,6 +62,8 @@ type
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
     procedure Button10Click(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
+    procedure Button12Click(Sender: TObject);
   private
     FConn: IDatabaseConnection;
     FRepo: IRepository<TProduto>;
@@ -98,9 +102,48 @@ end;
 procedure TFSample.Button10Click(Sender: TObject);
 begin
   FRepo
-    .Criteria
+    .Select
       .LessThan('cod_produto', 10)
       .OrderBy('cod_produto', false)
+    .&End
+  .DataSource(DataSource1)
+  .List;
+end;
+
+procedure TFSample.Button11Click(Sender: TObject);
+begin
+  FRepo
+    .Select
+      .AddField('codigo1')
+      .AddField('count(1) total')
+      .GroupBy('codigo1')
+      .OrderBy('count(1)', True)
+    .&End
+  .DataSource(DataSource1)
+  .List;
+end;
+
+procedure TFSample.Button12Click(Sender: TObject);
+const
+  PAGE_SIZE = 10;
+  PAGE = 2;
+begin
+  FRepo
+    .Select
+      .TableAlias('p')
+      .AddField('p.cod_produto')
+      .AddField('p.codigo1')
+      .AddField('p.descricao')
+      .AddField('p.marca')
+      .AddField('p.qtd')
+      .AddField('p.tipo_unidade')
+      .AddField('p.preco_venda')
+      .AddField('p.titulo')
+      .AddField('g.descricao as nome_grupo')
+      .LeftJoin('tbgrupo g', 'g.cod_grupo = p.titulo')
+      .Skip((PAGE-1) * PAGE_SIZE)
+      .Take(PAGE_SIZE)
+      .OrderBy('p.cod_produto')
     .&End
   .DataSource(DataSource1)
   .List;
@@ -142,7 +185,7 @@ begin
   FIdProduto:= StrToIntDef(InputBox('Digite o ID do produto', 'Id do Produto:', ''), 0);
 
   FRepo
-    .Criteria
+    .Select
       .Equal('cod_produto', FIdProduto)
       .TableAlias('p')
       .AddField('p.cod_produto')
@@ -246,7 +289,7 @@ end;
 procedure TFSample.Button6Click(Sender: TObject);
 begin
   FRepo
-    .Criteria
+    .Select
       .Like('descricao', 'SIMPLEX')
       .Like('codigo1', 'SAB')
       .OrderBy('cod_produto', false)
@@ -259,7 +302,7 @@ end;
 procedure TFSample.Button7Click(Sender: TObject);
 begin
   FRepo
-    .Criteria
+    .Select
       .Between('cod_produto', 1, 5)
       .OrderBy('cod_produto', false)
     .&End
@@ -270,7 +313,7 @@ end;
 procedure TFSample.Button8Click(Sender: TObject);
 begin
   FRepo
-    .Criteria
+    .Select
       .&In('cod_produto', [1,3,5,10])
       .OrderBy('cod_produto', false)
     .&End
@@ -281,7 +324,7 @@ end;
 procedure TFSample.Button9Click(Sender: TObject);
 begin
   FRepo
-    .Criteria
+    .Select
       .GreaterThan('cod_produto', 10)
       .OrderBy('cod_produto', false)
     .&End
@@ -313,7 +356,7 @@ end;
 procedure TFSample.ListarProdutos;
 begin
   FRepo
-    .Criteria
+    .Select
       .TableAlias('p')
       .AddField('p.cod_produto')
       .AddField('p.codigo1')

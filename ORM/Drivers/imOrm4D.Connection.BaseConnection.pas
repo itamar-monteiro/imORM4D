@@ -27,7 +27,7 @@ type
   public
     destructor Destroy; override;
     function GetConnection: TFDConnection;
-    function GetDialect: TDatabaseDriver; virtual;
+    function GetDatabaseDriver: TDatabaseDriver; virtual;
     procedure Connect;
     procedure Disconnect;
     function InTransaction: Boolean;
@@ -73,7 +73,7 @@ begin
   Result:= FConn;
 end;
 
-function TFireDACBaseConnection.GetDialect: TDatabaseDriver;
+function TFireDACBaseConnection.GetDatabaseDriver: TDatabaseDriver;
 begin
   raise Exception.Create('Driver não implementado');
 end;
