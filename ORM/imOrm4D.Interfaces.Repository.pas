@@ -24,6 +24,10 @@ type
     function Select: ISelect<IRepository<T>>;
     function DataSource(ADataSource: TDataSource): IRepository<T>;
     function List: IRepository<T>;
+    function LastID(const ATable, AField: string): Integer;
+    function StartTransaction: IRepository<T>;
+    function Commit: IRepository<T>;
+    function Rollback: IRepository<T>;
   end;
 
   implementation

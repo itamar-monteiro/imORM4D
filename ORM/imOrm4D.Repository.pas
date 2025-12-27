@@ -21,6 +21,7 @@ type
     FSelect: ISelect<IRepository<T>>;
     FLastQuery: TFDQuery;
     FDataSource: TDataSource;
+    FTransaction: TFDTransaction;
     function CreateEntity: T;
     function PrimaryKeyProp: TRttiProperty;
     function ColumnProps: TArray<TRttiProperty>;
@@ -39,7 +40,11 @@ type
     function GetAll: TList<T>;
     function Select: ISelect<IRepository<T>>;
     function List: IRepository<T>;
+    function LastID(const ATable, AField: string): Integer;
     function DataSource(ADataSource: TDataSource): IRepository<T>;
+    function StartTransaction: IRepository<T>;
+    function Commit: IRepository<T>;
+    function Rollback: IRepository<T>;
     constructor Create(const AConnection: IDatabaseConnection);
     destructor Destroy; override;
   end;
@@ -55,6 +60,15 @@ uses
   imOrm4D.Select,
   imOrm4D.Connection.Driver.Helper;
 
+function TRepository<T>.Commit: IRepository<T>;
+begin
+  Result:= Self;
+  if not FTransaction.Active then
+    raise Exception.Create('Não há transação ativa para commit.');
+
+  FTransaction.Commit;
+end;
+
 constructor TRepository<T>.Create(const AConnection: IDatabaseConnection);
 begin
   FConn   := AConnection;
@@ -63,6 +77,9 @@ begin
   FTable  := GetTableName(FType);
   FSelect := nil;
   FLastQuery:= nil;
+  // Cria a transação associada à conexão
+  FTransaction:= TFDTransaction.Create(nil);
+  FTransaction.Connection:= FConn.GetConnection;
 end;
 
 function TRepository<T>.CreateEntity: T;
@@ -77,6 +94,15 @@ begin
   Result:= FSelect;
 end;
 
+function TRepository<T>.StartTransaction: IRepository<T>;
+begin
+  Result:= Self;
+  if FTransaction.Active then
+    Exit;
+
+  FTransaction.StartTransaction;
+end;
+
 function TRepository<T>.PrimaryKeyProp: TRttiProperty;
 var
   P: TRttiProperty;
@@ -86,6 +112,15 @@ begin
   for P in FType.GetProperties do
     if TAttributeHelper.HasAttribute<PrimaryKeyAttribute>(P) then
       Exit(P);
+end;
+
+function TRepository<T>.Rollback: IRepository<T>;
+begin
+  Result:= Self;
+  if not FTransaction.Active then
+    raise Exception.Create('Não há transação ativa para rollback.');
+
+  FTransaction.Rollback;
 end;
 
 function TRepository<T>.ColumnProps: TArray<TRttiProperty>;
@@ -274,7 +309,11 @@ destructor TRepository<T>.Destroy;
 begin
   if Assigned(FLastQuery) then
     FLastQuery.Free;
-  FSelect:= nil; // Interface será liberada automaticamente
+
+  if Assigned(FTransaction) then
+    FreeAndNil(FTransaction);
+
+  FSelect:= nil;
   inherited;
 end;
 
@@ -497,6 +536,21 @@ begin
 
   finally
     Placeholders.Free; Cols.Free; Query.Free;
+  end;
+end;
+
+function TRepository<T>.LastID(const ATable, AField: string): Integer;
+var
+  Query: TFDQuery;
+begin
+  Query:= TFDQuery.Create(nil);
+  try
+    Query.Connection:= FConn.GetConnection;
+    Query.SQL.Text:= Format('SELECT coalesce(max(%s), 0) FROM %s', [AField, ATable]);
+    Query.Open;
+    Result:= Query.Fields[0].AsInteger;
+  finally
+    Query.Free;
   end;
 end;
 
