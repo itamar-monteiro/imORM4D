@@ -12,12 +12,14 @@ uses
   FireDAC.DApt,
   FireDAC.Stan.Intf,
   FireDAC.VCLUI.Wait,
-  FireDAC.Comp.UI;
+  FireDAC.Comp.UI,
+  imOrm4D.Connection.Drivers;
 
 type
   IDatabaseConnection = interface
     ['{376F0B9C-01BB-4A5A-8B9B-24B2C49D0230}']
     function GetConnection: TFDConnection;
+    function GetDialect: TDatabaseDriver;
     procedure Connect;
     procedure Disconnect;
     function InTransaction: Boolean;

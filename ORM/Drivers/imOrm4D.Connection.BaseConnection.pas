@@ -13,7 +13,8 @@ uses
   FireDAC.Stan.Intf,
   FireDAC.VCLUI.Wait,
   FireDAC.Comp.UI,
-  imOrm4D.Interfaces.Connection;
+  imOrm4D.Interfaces.Connection,
+  imOrm4D.Connection.Drivers;
 
 type
   TFireDACBaseConnection = class(TInterfacedObject, IDatabaseConnection)
@@ -26,6 +27,7 @@ type
   public
     destructor Destroy; override;
     function GetConnection: TFDConnection;
+    function GetDialect: TDatabaseDriver; virtual;
     procedure Connect;
     procedure Disconnect;
     function InTransaction: Boolean;
@@ -69,6 +71,11 @@ end;
 function TFireDACBaseConnection.GetConnection: TFDConnection;
 begin
   Result:= FConn;
+end;
+
+function TFireDACBaseConnection.GetDialect: TDatabaseDriver;
+begin
+  raise Exception.Create('Driver não implementado');
 end;
 
 function TFireDACBaseConnection.InTransaction: Boolean;

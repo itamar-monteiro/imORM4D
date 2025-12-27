@@ -13,7 +13,8 @@ uses
   FireDAC.Stan.Intf,
   FireDAC.VCLUI.Wait,
   FireDAC.Comp.UI,
-  imOrm4D.Connection.BaseConnection;
+  imOrm4D.Connection.BaseConnection,
+  imOrm4D.Connection.Drivers;
 
 type
   TPostgresConnection = class(TFireDACBaseConnection)
@@ -25,8 +26,9 @@ type
     FPort: Integer;
   protected
     procedure ConfigureConnection; override;
-    constructor Create(const AServer, ADatabase, AUser, APassword: string; APort: Integer = 5432);
+    constructor Create(const AServer, ADatabase, AUser, APassword: string; APort: Integer = 5432); reintroduce;
   public
+    function GetDialect: TDatabaseDriver; override;
     class function New(const AServer, ADatabase, AUser, APassword: string; APort: Integer): TPostgresConnection;
   end;
 
@@ -44,6 +46,11 @@ begin
   FUser    := AUser;
   FPassword:= APassword;
   FPort    := APort;
+end;
+
+function TPostgresConnection.GetDialect: TDatabaseDriver;
+begin
+  Result:= ddPostgres;
 end;
 
 class function TPostgresConnection.New(const AServer, ADatabase, AUser, APassword: string; APort: Integer): TPostgresConnection;

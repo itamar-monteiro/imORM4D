@@ -13,7 +13,8 @@ uses
   FireDAC.Stan.Intf,
   FireDAC.VCLUI.Wait,
   FireDAC.Comp.UI,
-  imOrm4D.Connection.BaseConnection;
+  imOrm4D.Connection.BaseConnection,
+  imOrm4D.Connection.Drivers;
 
 type
   TFirebirdConnection = class(TFireDACBaseConnection)
@@ -25,8 +26,9 @@ type
     FPort: Integer;
   protected
     procedure ConfigureConnection; override;
-    constructor Create(const AServer, ADatabase, AUser, APassword: string; APort: Integer = 3050);
+    constructor Create(const AServer, ADatabase, AUser, APassword: string; APort: Integer = 3050); reintroduce;
   public
+    function GetDialect: TDatabaseDriver; override;
     class function New(const AServer, ADatabase, AUser, APassword: string; APort: Integer): TFirebirdConnection;
   end;
 
@@ -44,6 +46,11 @@ begin
   FUser    := AUser;
   FPassword:= APassword;
   FPort    := APort;
+end;
+
+function TFirebirdConnection.GetDialect: TDatabaseDriver;
+begin
+  Result:= ddFirebird;
 end;
 
 class function TFirebirdConnection.New(const AServer, ADatabase, AUser, APassword: string; APort: Integer): TFirebirdConnection;

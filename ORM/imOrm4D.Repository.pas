@@ -508,7 +508,6 @@ var
   P: TRttiProperty;
   Attr: TCustomAttribute;
   Fld: TField;
-  V: Variant;
 begin
   Result:= Self;
 

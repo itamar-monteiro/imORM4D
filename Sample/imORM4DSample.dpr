@@ -14,7 +14,8 @@ uses
   imOrm4D.Connection.BaseConnection in '..\ORM\Drivers\imOrm4D.Connection.BaseConnection.pas',
   imOrm4D.Connection.Firebird in '..\ORM\Drivers\imOrm4D.Connection.Firebird.pas',
   imOrm4D.Connection.Postgres in '..\ORM\Drivers\imOrm4D.Connection.Postgres.pas',
-  imOrm4D.Interfaces.Connection in '..\ORM\Drivers\imOrm4D.Interfaces.Connection.pas';
+  imOrm4D.Interfaces.Connection in '..\ORM\Drivers\imOrm4D.Interfaces.Connection.pas',
+  imOrm4D.Connection.Drivers in '..\ORM\Drivers\imOrm4D.Connection.Drivers.pas';
 
 {$R *.res}
 

@@ -139,6 +139,7 @@
         <DCCReference Include="..\ORM\Drivers\imOrm4D.Connection.Firebird.pas"/>
         <DCCReference Include="..\ORM\Drivers\imOrm4D.Connection.Postgres.pas"/>
         <DCCReference Include="..\ORM\Drivers\imOrm4D.Interfaces.Connection.pas"/>
+        <DCCReference Include="..\ORM\Drivers\imOrm4D.Connection.Drivers.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

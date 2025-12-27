@@ -62,7 +62,6 @@ type
     procedure Button10Click(Sender: TObject);
   private
     FConn: IDatabaseConnection;
-    FConnFirebird: IDatabaseConnection;
     FRepo: IRepository<TProduto>;
     FProduto: TProduto;
     FIdProduto: Integer;
